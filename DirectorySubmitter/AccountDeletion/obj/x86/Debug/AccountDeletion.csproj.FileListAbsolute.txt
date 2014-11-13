@@ -1,0 +1,10 @@
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountDeletion\bin\Debug\AccountDeletion.exe.config
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountDeletion\bin\Debug\AccountDeletion.exe
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountDeletion\bin\Debug\AccountDeletion.pdb
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountDeletion\obj\x86\Debug\AccountDeletion.csprojResolveAssemblyReference.cache
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountDeletion\obj\x86\Debug\AccountDeletion.frmDelAcc.resources
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountDeletion\obj\x86\Debug\AccountDeletion.frmDelAllAcc.resources
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountDeletion\obj\x86\Debug\AccountDeletion.Properties.Resources.resources
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountDeletion\obj\x86\Debug\AccountDeletion.csproj.GenerateResource.Cache
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountDeletion\obj\x86\Debug\AccountDeletion.exe
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountDeletion\obj\x86\Debug\AccountDeletion.pdb

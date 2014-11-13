@@ -1,0 +1,14 @@
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountCreation\bin\Debug\AccountCreation.exe.config
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountCreation\obj\x86\Debug\Interop.SHDocVw.dll
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountCreation\obj\x86\Debug\AccountCreation.csproj.ResolveComReference.cache
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountCreation\bin\Debug\AccountCreation.exe
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountCreation\bin\Debug\AccountCreation.pdb
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountCreation\obj\x86\Debug\AccountCreation.csprojResolveAssemblyReference.cache
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountCreation\obj\x86\Debug\DirectorySubmitter.CommonControls.FrmSearch.resources
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountCreation\obj\x86\Debug\AccountCreation.UI.FrmAddCaptchaManually.resources
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountCreation\obj\x86\Debug\AccountCreation.UI.FrmExpressSubmission.resources
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountCreation\obj\x86\Debug\AccountCreation.UI.FrmRegister.resources
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountCreation\obj\x86\Debug\AccountCreation.csproj.GenerateResource.Cache
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountCreation\obj\x86\Debug\AccountCreation.exe
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountCreation\obj\x86\Debug\AccountCreation.pdb
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\AccountCreation\obj\x86\Debug\AccountCreation.TestingProxy.frmShowOutput.resources

@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountCreation", "AccountCreation\AccountCreation.csproj", "{8D326889-FC0B-4422-AD71-91F8A9DA0890}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountDeletion", "AccountDeletion\AccountDeletion.csproj", "{865B01C2-4153-4E67-9BB6-683552D08EEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataGenerator", "DataGenerator\DataGenerator.csproj", "{D187FE29-0025-4089-A01A-60F6C0FE0E67}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8D326889-FC0B-4422-AD71-91F8A9DA0890}.Debug|x86.ActiveCfg = Debug|x86
+		{8D326889-FC0B-4422-AD71-91F8A9DA0890}.Debug|x86.Build.0 = Debug|x86
+		{8D326889-FC0B-4422-AD71-91F8A9DA0890}.Release|x86.ActiveCfg = Release|x86
+		{8D326889-FC0B-4422-AD71-91F8A9DA0890}.Release|x86.Build.0 = Release|x86
+		{865B01C2-4153-4E67-9BB6-683552D08EEF}.Debug|x86.ActiveCfg = Debug|x86
+		{865B01C2-4153-4E67-9BB6-683552D08EEF}.Debug|x86.Build.0 = Debug|x86
+		{865B01C2-4153-4E67-9BB6-683552D08EEF}.Release|x86.ActiveCfg = Release|x86
+		{865B01C2-4153-4E67-9BB6-683552D08EEF}.Release|x86.Build.0 = Release|x86
+		{D187FE29-0025-4089-A01A-60F6C0FE0E67}.Debug|x86.ActiveCfg = Debug|x86
+		{D187FE29-0025-4089-A01A-60F6C0FE0E67}.Debug|x86.Build.0 = Debug|x86
+		{D187FE29-0025-4089-A01A-60F6C0FE0E67}.Release|x86.ActiveCfg = Release|x86
+		{D187FE29-0025-4089-A01A-60F6C0FE0E67}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

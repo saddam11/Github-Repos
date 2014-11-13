@@ -1,0 +1,10 @@
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\DataGenerator\bin\Debug\DataGenerator.exe.config
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\DataGenerator\bin\Debug\DataGenerator.exe
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\DataGenerator\bin\Debug\DataGenerator.pdb
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\DataGenerator\obj\x86\Debug\DataGenerator.csprojResolveAssemblyReference.cache
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\DataGenerator\obj\x86\Debug\DataGenerator.CommonControls.FrmSearch.resources
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\DataGenerator\obj\x86\Debug\DataGenerator.NameGenerator.resources
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\DataGenerator\obj\x86\Debug\DataGenerator.Properties.Resources.resources
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\DataGenerator\obj\x86\Debug\DataGenerator.csproj.GenerateResource.Cache
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\DataGenerator\obj\x86\Debug\DataGenerator.exe
+E:\Projects\DirectorySubmitter\Current\DirectorySubmitter\DataGenerator\obj\x86\Debug\DataGenerator.pdb
