@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-
+// search class
 namespace DirectorySubmitter.CommonControls
 {
     public partial class FrmSearch : Form
