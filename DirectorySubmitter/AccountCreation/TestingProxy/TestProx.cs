@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +10,11 @@ using System.Data;
 using System.Net.NetworkInformation;
 using System.IO;
 using System.Globalization;
+using System.Diagnostics;
+using System.Web;
+using System.Web.UI;
+using System.Xml.Linq;
+using System.Drawing;
 
 namespace AccountCreation.TestingProxy
 {
@@ -97,6 +102,8 @@ namespace AccountCreation.TestingProxy
 
         }
 
+
+
         private static void FillTheInfoFromDB(DataTable dtAttributeName, DataTable dtDBValues)
         {
             #region Browser Configurations
@@ -105,159 +112,116 @@ namespace AccountCreation.TestingProxy
             wbRegistration.UserAgent = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.10 (KHTML, like Gecko) Chrome/8.0.552.224 Safari/534.10";
 
             //browser.SetProxy(dt.Rows[iRow][1].ToString(), Convert.ToInt32(dt.Rows[iRow][2].ToString()));
-
-            //4. Navigate to gmail
-            strURL = "https://accounts.google.com/SignUp";
-            //strURL = "http://localhost/SignupGmail.htm";
-            wbRegistration.Navigate(strURL);
-            if (LastRequestFailed(wbRegistration)) return; // always check the last request in case the page failed to load
+            try
+            {
+                //4. Navigate to gmail
+                strURL = "https://accounts.google.com/SignUp";
+                wbRegistration.Navigate(strURL);
+                if (LastRequestFailed(wbRegistration)) return; // always check the last request in case the page failed to load
             #endregion
 
-            List<HtmlResult> MainAttribute = new List<HtmlResult>();
-            List<HtmlResult> PlaceHolderAttribute = new List<HtmlResult>();
+                List<HtmlResult> MainAttribute = new List<HtmlResult>();
+                List<HtmlResult> PlaceHolderAttribute = new List<HtmlResult>();
 
-            Browser br = wbRegistration;
+                Browser br = wbRegistration;
 
-            for (int i = 0; i < dtAttributeName.Columns.Count; i++ )
-            {
-                MainAttribute.Add(wbRegistration.Find(dtAttributeName.Rows[0][i].ToString()));
-                PlaceHolderAttribute.Add(wbRegistration.Find(dtAttributeName.Rows[0][i].ToString() + "-placeholder"));
-            }
-
-            bool blnCapchaSolve = false;
-            string column="";
-            for (int i = 0; i < MainAttribute.Count; i++)
-            {
-
-                if (MainAttribute[i].XElement.Name.LocalName.ToString().Equals("input"))
+                for (int i = 0; i < dtAttributeName.Columns.Count; i++)
                 {
-                    column = dtAttributeName.Rows[0][i].ToString();
-                    if (MainAttribute[i].Exists)
-                        br.Find("input", FindBy.Name, column).Value = dtDBValues.Rows[0][i].ToString();
+                    MainAttribute.Add(wbRegistration.Find(dtAttributeName.Rows[0][i].ToString()));
+                    PlaceHolderAttribute.Add(wbRegistration.Find(dtAttributeName.Rows[0][i].ToString() + "-placeholder"));
                 }
-                else
+
+                bool blnCapchaSolve = false;
+                string column = "";
+                for (int i = 0; i < MainAttribute.Count; i++)
                 {
-                    if (MainAttribute[i].XElement.Name.LocalName.ToString().Equals("select"))
-                        column = dtAttributeName.Rows[0][i].ToString();
-                    #region ComboBox Code...
-                    if (MainAttribute[i].Exists)
+                    string strTagType = MainAttribute[i].XElement.Name.LocalName.ToString();
+                    if (strTagType.Equals("input"))
                     {
-                        switch (column)
+                        column = dtAttributeName.Rows[0][i].ToString();
+                        if (MainAttribute[i].Exists)
                         {
-                            case "BirthMonth":
-                                br.Find("select", FindBy.Name, column).XElement.SetValue("<SELECT id=BirthMonth name=BirthMonth> <OPTION selected value=" + dtDBValues.Rows[0][i] + ">" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Convert.ToInt32(dtDBValues.Rows[0][i])) + "</OPTION> <OPTION value=01>January</OPTION> <OPTION value=02>February</OPTION> <OPTION value=03>March</OPTION> <OPTION value=04>April</OPTION> <OPTION value=05>May</OPTION> <OPTION value=06>June</OPTION> <OPTION value=07>July</OPTION> <OPTION value=08>August</OPTION> <OPTION value=09>September</OPTION> <OPTION value=10>October</OPTION> <OPTION value=11>November</OPTION> <OPTION value=12>December</OPTION></SELECT>");
-                                break;
-                            case "Gender":
-                                if (dtDBValues.Rows[0][column].ToString().Equals("Female"))
-                                {
-                                    br.Find("select", FindBy.Name, column).XElement.SetAttributeCI("aria-posinset", "1");
-                                    break;
-                                }
-                                else if (dtDBValues.Rows[0][column].ToString().Equals("Male"))
-                                {
-                                    br.Find("select", FindBy.Name, column).XElement.SetAttributeCI("aria-posinset", "2");
-                                    break;
-                                }
-                                else if (dtDBValues.Rows[0][column].ToString().Equals("Other"))
-                                {
-                                    br.Find("select", FindBy.Name, column).XElement.SetAttributeCI("aria-posinset", "3");
-                                }
-                                break;
-                            case "CountryCode":
-                            default:
-                                break;
+                            if (column == "TermsOfService")
+                            {
+                                MainAttribute[i].XElement.Add(new XAttribute("checked", "true"));
+                            }
+                            else
+                            {
+                                br.Find("input", FindBy.Name, column).Value = dtDBValues.Rows[0][i].ToString();
+                            }
+                            if (!blnCapchaSolve && column.Equals("recaptcha_response_field"))
+                            {
+                                SolveCaptcha(br);
+                                blnCapchaSolve = true;
+                            }
                         }
-
                     }
-                    #endregion
-                }
+                    else if (strTagType.Equals("select"))
+                    {
+                        #region Code For dropdown Selecction
+                        column = dtAttributeName.Rows[0][i].ToString();
+                        if (MainAttribute[i].Exists)
+                        {
+                            XDocument doc;
+                            doc = br.XDocument;
+                            var penItemValue = from opt in doc.Descendants("option")
+                                               where opt.Attribute("value").Value == ""
+                                               select opt;
+                            switch (column)
+                            {
+                                case "BirthMonth":
 
+                                    //XElement result = doc.Descendants("option").First();
+                                    XElement xelement = ((IEnumerable<System.Xml.Linq.XElement>)penItemValue).ToList()[0];
+                                    xelement.Attribute("value").Value = xelement.Attribute("value").Value + "" + dtDBValues.Rows[0][i].ToString() + "";
+                                    xelement.Value = "" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Convert.ToInt32(dtDBValues.Rows[0][i])).ToString() + "";
+                                    xelement.Add(new XAttribute("selected", "true"));
+                                    //br.Find("select", FindBy.Name, column).XElement.SetValue(System.Web.HttpUtility.HtmlDecode("<SELECT id=BirthMonth name=BirthMonth> <OPTION selected value=" + dtDBValues.Rows[0][i] + ">" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Convert.ToInt32(dtDBValues.Rows[0][i])) + "</OPTION> <OPTION value=01>January</OPTION> <OPTION value=02>February</OPTION> <OPTION value=03>March</OPTION> <OPTION value=04>April</OPTION> <OPTION value=05>May</OPTION> <OPTION value=06>June</OPTION> <OPTION value=07>July</OPTION> <OPTION value=08>August</OPTION> <OPTION value=09>September</OPTION> <OPTION value=10>October</OPTION> <OPTION value=11>November</OPTION> <OPTION value=12>December</OPTION></SELECT>"));
+                                    //br.XDocument.Save(doc); 
+                                    break;
+                                case "Gender":
+                                    xelement = ((IEnumerable<System.Xml.Linq.XElement>)penItemValue).ToList()[0];
+                                    if (dtDBValues.Rows[0][column].ToString().Equals("Female"))
+                                    {
+                                        xelement.Attribute("value").Value = xelement.Attribute("value").Value + "" + dtDBValues.Rows[0][i].ToString().ToUpper() + "";
+                                        xelement.Value = "" + CultureInfo.GetCultureInfo("en-Us").TextInfo.ToTitleCase(dtDBValues.Rows[0][i].ToString()) + "";
+                                        //br.Find("select", FindBy.Name, column).XElement.SetAttributeCI("aria-posinset", "1");
+                                        break;
+                                    }
+                                    else if (dtDBValues.Rows[0][column].ToString().Equals("Male"))
+                                    {
+                                        xelement.Attribute("value").Value = xelement.Attribute("value").Value + "" + dtDBValues.Rows[0][i].ToString().ToUpper() + "";
+                                        xelement.Value = "" + CultureInfo.GetCultureInfo("en-Us").TextInfo.ToTitleCase(dtDBValues.Rows[0][i].ToString()) + "";
+                                        //br.Find("select", FindBy.Name, column).XElement.SetAttributeCI("aria-posinset", "2");
+                                        break;
+                                    }
+                                    else if (dtDBValues.Rows[0][column].ToString().Equals("Other"))
+                                    {
+                                        xelement.Attribute("value").Value = xelement.Attribute("value").Value + "" + dtDBValues.Rows[0][i].ToString().ToUpper() + "";
+                                        xelement.Value = "" + CultureInfo.GetCultureInfo("en-Us").TextInfo.ToTitleCase(dtDBValues.Rows[0][i].ToString()) + "";
+                                        //br.Find("select", FindBy.Name, column).XElement.SetAttributeCI("aria-posinset", "3");
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        #endregion
+                    }
+                }
             }
-            var loginLink = br.Find("input", FindBy.Name, "submitbutton");
-            if (loginLink.Exists)
+            catch (Exception ex)
             {
-                var Result = loginLink.Click();
-                if (ClickResult.SucceededNavigationComplete == Result)
-                {
-                    Console.WriteLine("===========================================================================");
-                    (new frmShowOutput(br.CurrentHtml)).ShowDialog();
-                    Console.WriteLine(br.CurrentHtml);
-                    Console.WriteLine("===========================================================================");
-                }
-                else
-                {
-                    Console.WriteLine("===========================================================================");
-                    (new frmShowOutput(br.CurrentHtml)).ShowDialog();
-                    Console.WriteLine(br.CurrentHtml);
-                    Console.WriteLine("===========================================================================");
-                }
+                Console.WriteLine("Error: " + ex.Message);
+                Console.ReadLine();
             }
-            
-            //        if (hrAttribute.Value.Equals("BirthMonth"))
-            //        {
+            finally
+            {
 
-            //            //hrAttribute.OffsetParent.FirstChild.InnerHtml = "<SELECT id=BirthMonth name=BirthMonth> <OPTION selected value=" + strDBValues[i] + ">" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Convert.ToInt32(strDBValues[i])) + "</OPTION> <OPTION value=01>January</OPTION> <OPTION value=02>February</OPTION> <OPTION value=03>March</OPTION> <OPTION value=04>April</OPTION> <OPTION value=05>May</OPTION> <OPTION value=06>June</OPTION> <OPTION value=07>July</OPTION> <OPTION value=08>August</OPTION> <OPTION value=09>September</OPTION> <OPTION value=10>October</OPTION> <OPTION value=11>November</OPTION> <OPTION value=12>December</OPTION></SELECT>";
-            //        }
-            //        else if (hrAttribute.Id == "Gender")
-            //        {
-            //            HtmlElementCollection hecSelects = wbRegistration.Document.GetElementsByTagName("select");
-            //            hecSelects[1].Document.GetElementsByTagName("option")[13].SetAttribute("value", strDBValues[i].ToUpper());
-            //            hecSelects[1].Document.GetElementsByTagName("option")[13].InnerHtml = strDBValues[i].ToString();
-            //            if (strDBValues[i].ToString().Equals("Female"))
-            //                hecSelects[1].Document.GetElementsByTagName("option")[13].SetAttribute("aria-posinset", "1");
-            //            else if (strDBValues[i].ToString().Equals("Male"))
-            //                hecSelects[1].Document.GetElementsByTagName("option")[13].SetAttribute("aria-posinset", "2");
-            //            else if (strDBValues[i].ToString().Equals("Other"))
-            //                hecSelects[1].Document.GetElementsByTagName("option")[13].SetAttribute("aria-posinset", "3");
-            //        }
+                //Process.Start(s);
+            }
 
-            //        else if (hrAttribute.Id == "CountryCode")
-            //        {
-            //            HtmlElementCollection hecSelects = wbRegistration.Document.GetElementsByTagName("select");
-
-            //        }
-            //        else if (hrAttribute.Id == "TermsOfService")
-            //        {
-            //            wbRegistration.Document.GetElementById("TermsOfService").SetAttribute("value", "yes");
-            //            wbRegistration.Document.GetElementById("TermsOfService").SetAttribute("aria-invalid", "true");
-            //            wbRegistration.Document.GetElementById("TermsOfService").SetAttribute("checked", "True");
-
-            //        }
-            //        else if (hrAttribute.Id == "recaptcha_response_field" && !blnCapchaSolve)
-            //        {
-            //            HtmlElement heCaptchaImage = wbRegistration.Document.GetElementById("recaptcha_challenge_image");
-            //            CaptchaInfo.FilePath = wbRegistration.Document.GetElementById("recaptcha_challenge_image").GetAttribute("src");
-
-            //            #region Convert URL to Image Object
-            //            System.Net.WebClient MyWebClient = new System.Net.WebClient();
-            //            byte[] ImageInBytes = MyWebClient.DownloadData(CaptchaInfo.FilePath);
-            //            System.IO.MemoryStream ImageStream = new System.IO.MemoryStream(ImageInBytes);
-            //            Image img = new System.Drawing.Bitmap(ImageStream);
-            //            #endregion
-
-            //            #region Account Details
-            //            CaptchaInfo.CaptchaImage = img;
-            //            CaptchaInfo.UserName = "shivajik";
-            //            CaptchaInfo.UserPassword = "admin12!";
-            //            CaptchaDet.CaptchaDet.ApplyCaptcha();
-            //            wbRegistration.Document.GetElementById("recaptcha_response_field").SetAttribute("value", CaptchaInfo.Code);
-            //            #endregion
-
-            //            blnCapchaSolve = true;
-            //        }
-            //        else
-            //            hrAttribute.SetAttribute("value", strDBValues[i]);
-            //    }
-            //}
-
-            //foreach (HtmlElement placehd in PlaceHolderAttribute)
-            //{
-            //    if (placehd != null)
-            //    {
-            //        placehd.SetAttribute("InnerHtml", "");
-            //    }
-            //}
-
+            #region code For Submit Button
             //HtmlElement btnSubmit = wbRegistration.Document.GetElementById("submitbutton");
             //if (btnSubmit != null)
             //{
@@ -286,6 +250,32 @@ namespace AccountCreation.TestingProxy
             //    blnSuccess = false;
             //}
             //return (wbRegistration);
+            #endregion
+        }
+
+        private static void SolveCaptcha(Browser br)
+        {
+            var penItemValue = from opt in br.XDocument.Document.Descendants("img")
+                                               where opt.Attribute("src").Value.Contains("www.google.com/recaptcha/api/image")
+                                               select opt;
+            XElement xelement = ((IEnumerable<System.Xml.Linq.XElement>)penItemValue).ToList()[0];
+            CaptchaInfo.FilePath = xelement.GetAttribute("src");
+            HtmlResult hrCaptcha = br.FindAll("img");
+
+            #region Convert URL to Image Object
+            System.Net.WebClient MyWebClient = new System.Net.WebClient();
+            byte[] ImageInBytes = MyWebClient.DownloadData(CaptchaInfo.FilePath);
+            System.IO.MemoryStream ImageStream = new System.IO.MemoryStream(ImageInBytes);
+            Image img = new System.Drawing.Bitmap(ImageStream);
+            #endregion
+
+            #region Account Details
+            CaptchaInfo.CaptchaImage = img;
+            CaptchaInfo.UserName = "shivajik";
+            CaptchaInfo.UserPassword = "admin12!";
+            CaptchaDet.CaptchaDet.ApplyCaptcha();
+            br.Find("input", FindBy.Id, "recaptcha_response_field").Value = CaptchaInfo.Code;
+            #endregion
         }
 
 
